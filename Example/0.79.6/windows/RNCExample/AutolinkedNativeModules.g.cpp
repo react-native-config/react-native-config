@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "AutolinkedNativeModules.g.h"
 
-// Includes from @pasteltech/react-native-config
+// Includes from react-native-config
 #include <winrt/RNCConfig.h>
 
 namespace winrt::Microsoft::ReactNative
@@ -11,7 +11,7 @@ namespace winrt::Microsoft::ReactNative
 
 void RegisterAutolinkedNativeModulePackages(winrt::Windows::Foundation::Collections::IVector<winrt::Microsoft::ReactNative::IReactPackageProvider> const& packageProviders)
 { 
-    // IReactPackageProviders from @pasteltech/react-native-config
+    // IReactPackageProviders from react-native-config
     packageProviders.Append(winrt::RNCConfig::ReactPackageProvider());
 }
 
