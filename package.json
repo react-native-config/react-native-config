@@ -27,7 +27,7 @@
     "android/",
     "ios/",
     "windows/",
-    "src/",
+    "codegen/",
     "index.js",
     "index.d.ts",
     "react-native-config.podspec",
@@ -36,18 +36,16 @@
   "types": "./index.d.ts",
   "license": "MIT",
   "devDependencies": {
+    "@react-native-community/cli": "^20.0.2",
     "@semantic-release/git": "^10.0.1",
-    "semantic-release": "^19.0.5",
+    "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
-    "@types/jest": "^29.5.12"
-  },
-  "dependencies": {
-  "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.0",
-    "@babel/preset-react": "^7.24.7",
-    "babel-jest": "^29.7.0"
+    "react-native": "^0.79.6",
+    "react-native-windows": "^0.79.4"
   },
   "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
     "react-native-windows": ">=0.61"
   },
   "peerDependenciesMeta": {
@@ -56,17 +54,24 @@
     }
   },
   "codegenConfig": {
-    "name": "RNCConfigModule",
+    "name": "RNCConfigSpec",
     "type": "modules",
-    "jsSrcsDir": "./src",
+    "jsSrcsDir": "./codegen",
     "android": {
-      "javaPackageName": "com.luggit.reactnativeconfig"
+      "javaPackageName": "com.lugg.RNCConfig"
     },
     "ios": {
-      "prefix": "RNC"
+      "modules": {
+        "RNCConfig": {
+          "className": "RNCConfigModule",
+          "unstableRequiresMainQueueSetup": true
+        }
+      }
     },
     "windows": {
-      "cppNamespace": "RNCConfig"
+      "namespace": "RNCConfigCodegen",
+      "outputDirectory": "./windows/codegen",
+      "separateDataTypes": true
     }
   }
 }

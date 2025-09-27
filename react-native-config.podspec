@@ -4,6 +4,8 @@ require 'json'
 
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 
+fabric_enabled = ENV['RCT_NEW_ARCH_ENABLED'] == '1'
+
 Pod::Spec.new do |s|
   s.name         = 'react-native-config'
   s.version      = package['version']
@@ -36,8 +38,13 @@ HOST_PATH="$SRCROOT/../.."
   s.default_subspec = 'App'
 
     s.subspec 'App' do |app|
-    app.source_files = 'ios/**/*.{h,m}'
-    app.dependency 'React-Core'
+    app.source_files = 'ios/**/*.{h,m,mm}'
+    
+    if fabric_enabled
+      install_modules_dependencies(app)
+    else
+      app.dependency 'React-Core'
+    end
   end
 
   # Use this subspec for iOS extensions that cannot use React dependency

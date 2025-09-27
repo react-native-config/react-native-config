@@ -3,4 +3,16 @@
 node_modules
 xcuserdata
 xcshareddata
-/.idea/
+
+build
+
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+*.keystore
+!debug.keystore
+.kotlin/
+local.properties

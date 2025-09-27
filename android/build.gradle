@@ -61,6 +61,17 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    sourceSets.main {
+        java {
+            if (!isNewArchitectureEnabled()) {
+                srcDirs += ['src/oldarch/java']
+            } else {
+                // This should be done by the RN gradle plugin, for some reason it sometimes doesn't work
+                srcDirs += ['src/newarch/java']
+            }
+        }
+    }
 }
 
 def reactNativeArchitectures() {
@@ -73,5 +84,5 @@ repositories {
 }
 
 dependencies {
-    implementation "com.facebook.react:react-native:${safeExtGet("reactNative", "+")}" // from node_modules
+    implementation 'com.facebook.react:react-native:+'
 }

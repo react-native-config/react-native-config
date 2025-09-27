@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07BF4DBD2476FBED00E59829 /* RNCConfigModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 07BF4DBC2476FBED00E59829 /* RNCConfigModule.m */; };
+		07BF4DBD2476FBED00E59829 /* RNCConfigModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 07BF4DBC2476FBED00E59829 /* RNCConfigModule.mm */; };
 		3DF7F6B6203AA0C200D0EAB7 /* RNCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE4E8461C7D2456000F8875 /* RNCConfig.m */; };
 		3DF7F6B7203AA0D600D0EAB7 /* RNCConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB2648E21C7BE17A00B8F155 /* RNCConfig.h */; };
 		EB2648E31C7BE17A00B8F155 /* RNCConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB2648E21C7BE17A00B8F155 /* RNCConfig.h */; };
@@ -58,7 +58,7 @@
 
 /* Begin PBXFileReference section */
 		07BF4DBB2476FBED00E59829 /* RNCConfigModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNCConfigModule.h; sourceTree = "<group>"; };
-		07BF4DBC2476FBED00E59829 /* RNCConfigModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNCConfigModule.m; sourceTree = "<group>"; };
+		07BF4DBC2476FBED00E59829 /* RNCConfigModule.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RNCConfigModule.mm; sourceTree = "<group>"; };
 		3DF7F6AC203AA09B00D0EAB7 /* libRNCConfig-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libRNCConfig-tvOS.a"; path = "libReactNativeConfig-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		50406729228CAD5A00E0438A /* ReadDotEnv.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = ReadDotEnv.rb; sourceTree = "<group>"; };
 		50830C45228DD3D000CEA8FC /* BuildXCConfig.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = BuildXCConfig.rb; sourceTree = "<group>"; };
@@ -110,7 +110,7 @@
 				EB2648E21C7BE17A00B8F155 /* RNCConfig.h */,
 				EBE4E8461C7D2456000F8875 /* RNCConfig.m */,
 				07BF4DBB2476FBED00E59829 /* RNCConfigModule.h */,
-				07BF4DBC2476FBED00E59829 /* RNCConfigModule.m */,
+				07BF4DBC2476FBED00E59829 /* RNCConfigModule.mm */,
 				EBE4E8291C7BF6DD000F8875 /* BuildDotenvConfig.rb */,
 				50406729228CAD5A00E0438A /* ReadDotEnv.rb */,
 			);
@@ -239,7 +239,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07BF4DBD2476FBED00E59829 /* RNCConfigModule.m in Sources */,
+				07BF4DBD2476FBED00E59829 /* RNCConfigModule.mm in Sources */,
 				EBE4E8471C7D2456000F8875 /* RNCConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

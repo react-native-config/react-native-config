@@ -19,6 +19,8 @@
     <ClInclude Include="..\code\pch.h" />
     <ClInclude Include="..\code\ReactPackageProvider.h" />
     <ClInclude Include="..\code\RNCConfig.h" />
+    <ClInclude Include="..\codegen\NativeConfigModuleDataTypes.g.h" />
+    <ClInclude Include="..\codegen\NativeConfigModuleSpec.g.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\code\RNCConfig.def" />
