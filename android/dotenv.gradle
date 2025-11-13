@@ -1,27 +1,7 @@
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-def getCurrentFlavor() {
-    Gradle gradle = getGradle()
-
-    // match optional modules followed by the task
-    // (?:.*:)* is a non-capturing group to skip any :foo:bar: if they exist
-    // *[a-z]+([A-Za-z]+) will capture the flavor part of the task name onward (e.g., assembleRelease --> Release)
-    def pattern = Pattern.compile("(?:.*:)*[a-z]+([A-Z][A-Za-z0-9]+)")
-    def flavor = ""
-
-    gradle.getStartParameter().getTaskNames().any { name ->
-        Matcher matcher = pattern.matcher(name)
-        if (matcher.find()) {
-            flavor = matcher.group(1).toLowerCase()
-            return true
-        }
-    }
-
-    return flavor
-}
-
-def loadDotEnv(flavor = getCurrentFlavor()) {
+def loadDotEnv(variant) {
 
     def envFile = project.hasProperty("defaultEnvFile") ? project.defaultEnvFile : ".env"
     if (System.env['ENVFILE']) {
@@ -31,7 +11,7 @@ def loadDotEnv(flavor = getCurrentFlavor()) {
     } else if (project.hasProperty("envConfigFiles")) {
         // use startsWith because sometimes the task is "generateDebugSources", so we want to match "debug"
         project.ext.envConfigFiles.any { pair ->
-            if (flavor.startsWith(pair.key.toLowerCase())) {
+            if (variant.startsWith(pair.key.toLowerCase())) {
                 envFile = pair.value
                 return true
             }
@@ -64,14 +44,38 @@ def loadDotEnv(flavor = getCurrentFlavor()) {
     project.ext.set("env", env)
 }
 
-loadDotEnv()
+tasks.all { task ->
 
-android {
-    defaultConfig {
-        project.env.each { k, v ->
-            def escaped = v.replaceAll("%","\\\\u0025")
-            buildConfigField "String", k, "\"$v\""
-            resValue "string", k, "\"$escaped\""
+    // Find task name that is being ran
+    def currentTaskName = ""
+    gradle.getStartParameter().getTaskNames().any { name ->
+        if (name.equalsIgnoreCase(task.name)) {
+            currentTaskName = task.name
+            return true
+        }
+    }
+    if (currentTaskName.equals("")) return false
+
+    // Get variant
+    def pattern = Pattern.compile("[a-z]+(.*)")
+    def variant = ""
+
+    Matcher matcher = pattern.matcher(name)
+    if (matcher.find()) {
+        variant = matcher.group(1).toLowerCase()
+    }
+
+    // Load dot env configuration for the variant
+    loadDotEnv(variant)
+
+    // Configure env vars to build config fields
+    android {
+        defaultConfig {
+            project.env.each { k, v ->
+                def escaped = v.replaceAll("%","\\\\u0025")
+                buildConfigField "String", k, "\"$v\""
+                resValue "string", k, "\"$escaped\""
+            }
         }
     }
 }
