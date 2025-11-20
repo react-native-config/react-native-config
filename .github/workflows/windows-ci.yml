@@ -1,6 +1,9 @@
 name: Windows CI
 on: [pull_request]
 
+env:
+  TEST_EXAMPLE_DIR: Example/0.79.6
+
 jobs:
   run-windows-tests:
     name: Build & run tests
@@ -9,11 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       name: Checkout Code
-     
+
     - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: '16.19.0'
+        node-version: "24.11.1"
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1.3
@@ -24,7 +27,7 @@ jobs:
       uses: actions/cache@v3
       id: yarn-cache
       with:
-        path: ./Example/node_modules
+        path: ./${{ env.TEST_EXAMPLE_DIR }}/node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-yarn-
@@ -32,7 +35,7 @@ jobs:
     - name: Install node modules
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: |
-        cd Example
+        cd ${{ env.TEST_EXAMPLE_DIR }}
         yarn --pure-lockfile
 
     - name: Install MSBuild
@@ -45,6 +48,6 @@ jobs:
     - name: Start Appium server
       shell: powershell
       run: |
-        cd Example
+        cd ${{ env.TEST_EXAMPLE_DIR }}
         Start-Process PowerShell -ArgumentList "yarn appium"
-     
+

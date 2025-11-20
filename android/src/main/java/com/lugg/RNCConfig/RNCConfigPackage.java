@@ -35,7 +35,7 @@ public class RNCConfigPackage extends BaseReactPackage {
                 RNCConfigModule.NAME,
                 RNCConfigModule.NAME,
                 false, // canOverrideExistingModule
-                false, // needsEagerInit
+                true, // needsEagerInit
                 false, // hasConstants
                 false, // isCxxModule
                 isTurboModule // isTurboModule
