@@ -52,7 +52,8 @@ def loadDotEnv(flavor = getCurrentFlavor()) {
             def matcher = (line =~ /^\s*(?:export\s+|)([\w\d\.\-_]+)\s*=\s*['"]?(.*?)?['"]?\s*$/)
             // TODO: Fail Android builds if line doesn't match
             if (matcher.getCount() == 1 && matcher[0].size() == 3) {
-                env.put(matcher[0][1], matcher[0][2].replace('"', '\\"'))
+                def key = matcher[0][1].replaceAll(/^ANDROID_/, '')
+                env.put(key, matcher[0][2].replace('"', '\\"'))
             }
         }
     } else {
