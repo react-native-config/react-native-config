@@ -21,8 +21,8 @@ def read_dot_env(envs_root)
   end
 
   dotenv = begin
-    # https://regex101.com/r/cbm5Tp/1
-    dotenv_pattern = /^(?:export\s+|)(?<key>[[:alnum:]_]+)\s*=\s*((?<quote>["'])?(?<val>.*?[^\\])\k<quote>?|)$/
+    # https://regex101.com/r/L4RrR8/1
+    dotenv_pattern = /^(?:export\s+|)(?<key>[[:alnum:]_]+)\s*=\s*((?<quote>["'])?(?<val>.*?)\k<quote>?|)$/
 
     path = File.expand_path(File.join(envs_root, file.to_s))
     if File.exist?(path)
