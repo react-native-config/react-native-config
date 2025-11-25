@@ -26,6 +26,9 @@ Keep in mind this module doesn't obfuscate or encrypt secrets for packaging, so 
 
 ## Setup
 
+> ⚠️ Note (Android): react-native-config v1.6.0+ requires React Native 0.73 or higher.  
+> If you use an older RN version, see Troubleshooting below.
+
 Install the package:
 
 ```
@@ -400,6 +403,22 @@ If using Dexguard, the shrinking phase will remove resources it thinks are unuse
 This error stems from `.env` file being malformed. Accepted formats are listed here https://regex101.com/r/cbm5Tp/1. Common causes are:
   - Missing the .env file entirely
   - Rogue space anywhere, example: in front of env variable: ` MY_ENV='foo'`
+
+### Android build error: cannot find symbol BaseReactPackage
+
+Starting from **react-native-config v1.6.0**, the Android implementation uses
+`BaseReactPackage` instead of `ReactPackage`.
+
+`BaseReactPackage` exists only in **React Native 0.73+**, so projects using older
+React Native versions will see build errors like:
+
+> cannot find symbol  
+> class BaseReactPackage
+
+To fix this:
+
+- Use `react-native-config` **below 1.6.0** (e.g. `1.5.10`), or
+- Upgrade React Native to **0.73 or higher**
 
 ## Testing
 
