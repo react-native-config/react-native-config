@@ -61,6 +61,8 @@ def loadDotEnv(flavor = getCurrentFlavor()) {
         println("**************************")
     }
 
+    project.ext.set("envFlavor", flavor)
+    project.ext.set("envFile", envFile)
     project.ext.set("env", env)
 }
 
