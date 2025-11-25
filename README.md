@@ -79,6 +79,7 @@ if cocoapods are used in the project then pod has to be installed as well:
 	}
 	```
 	**MainApplication.java**
+   	If you are using a version of react-native lower than 0.70, add these lines to your MainApplication.java file. If you are using react native 0.70 or above, you can skip this step.
 	
 	```diff
 	+ import com.lugg.RNCConfig.RNCConfigPackage;
