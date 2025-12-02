@@ -308,6 +308,7 @@ $ cd android && export ENVFILE=.env.staging ./gradlew bundleRelease
 Alternatively, you can define a map in `build.gradle` associating builds with env files. Do it before the `apply from` call, and use build cases in lowercase, like:
 
 ```
+project.ext.defaultEnvFile = ".env.development"
 project.ext.envConfigFiles = [
     debug: ".env.development",
     release: ".env.production",
