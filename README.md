@@ -135,7 +135,7 @@ apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.grad
 
 #### Advanced Android Setup
 
-In `android/app/build.gradle`, if you use `applicationIdSuffix` or `applicationId` that is different from the package name indicated in `AndroidManifest.xml` in `<manifest package="...">` tag, for example, to support different build variants:
+In `android/app/build.gradle`, if you use `applicationIdSuffix` or an `applicationId` that is different from the `namespace` defined in the `android { ... }` block within the same file, for example, to support different build variants:
 Add this in `android/app/build.gradle`
 
 ```
@@ -392,7 +392,7 @@ When Proguard is enabled (which it is by default for Android release builds), it
 
     -keep class com.mypackage.BuildConfig { *; }
 
-`com.mypackage` should match the `package` value in your `app/src/main/AndroidManifest.xml` file.
+`com.mypackage` should match the `namespace` value in your `android/app/build.gradle` file.
 
 If using Dexguard, the shrinking phase will remove resources it thinks are unused. It is necessary to add an exception to preserve the build config package name.
 
