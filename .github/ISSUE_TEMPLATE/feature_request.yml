@@ -1,0 +1,88 @@
+name: ✨ Feature request
+description: Suggest a new capability or an improvement to an existing one.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. This library deliberately stays small — it reads config from
+        `.env` and exposes it to JS and native code — so the proposals that land are usually
+        the ones that make that job work better on more setups.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Before you start
+      options:
+        - label: I searched the [existing issues](https://github.com/react-native-config/react-native-config/issues?q=is%3Aissue) and nobody has proposed this yet.
+          required: true
+        - label: This isn't a bug report. (If something is broken, use the bug report template instead.)
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: >
+        Describe the situation you're actually in, not just the feature. What are you trying
+        to do, and where does the library get in the way today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to see?
+      description: Describe the behaviour you're proposing. Sketch the API or config if you have one in mind.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platforms
+    attributes:
+      label: Platforms this applies to
+      multiple: true
+      options:
+        - Android
+        - iOS
+        - macOS
+        - Windows
+        - JavaScript only
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What have you tried instead?
+      description: >
+        Workarounds, other libraries, or a custom native module. Knowing what fails helps
+        judge whether this belongs in the library or in userland.
+
+  - type: dropdown
+    id: breaking
+    attributes:
+      label: Would this be a breaking change?
+      options:
+        - "No — additive only"
+        - "Yes — existing setups would need changes"
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: Links to prior discussion, related React Native changes, or examples from other libraries.
+
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Would you like to build this?
+      description: >
+        Maintainer time is the scarce resource here, so a feature with someone behind it is
+        far more likely to ship.
+      options:
+        - label: I'm willing to open a pull request for this.
+          required: false

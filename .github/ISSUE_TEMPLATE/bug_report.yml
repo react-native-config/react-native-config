@@ -1,0 +1,133 @@
+name: 🐛 Bug report
+description: Something in react-native-config doesn't work the way it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a report. Most problems with this library live in
+        the native build, so the more of the boxes below you can fill in, the faster someone
+        can reproduce it.
+
+        **Please don't paste real secrets.** Redact any values from your `.env`.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Before you start
+      options:
+        - label: I searched the [existing issues](https://github.com/react-native-config/react-native-config/issues?q=is%3Aissue) and this isn't a duplicate.
+          required: true
+        - label: I read the [Troubleshooting section](https://github.com/react-native-config/react-native-config#troubleshooting) of the README.
+          required: true
+        - label: I'm using the latest version of `react-native-config` I can, and the problem still happens.
+          required: false
+
+  - type: input
+    id: library-version
+    attributes:
+      label: react-native-config version
+      placeholder: "1.6.2"
+    validations:
+      required: true
+
+  - type: input
+    id: rn-version
+    attributes:
+      label: React Native version
+      placeholder: "0.76.5"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platforms
+    attributes:
+      label: Platforms affected
+      description: Select every platform where you can reproduce this.
+      multiple: true
+      options:
+        - Android
+        - iOS
+        - macOS
+        - Windows
+    validations:
+      required: true
+
+  - type: dropdown
+    id: architecture
+    attributes:
+      label: Architecture
+      options:
+        - New architecture (Fabric / TurboModules)
+        - Old architecture (Paper)
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you see? Include the error message if there is one.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Number the steps, starting from a fresh app if you can.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: input
+    id: repro-link
+    attributes:
+      label: Link to a minimal reproduction
+      description: A small repo someone can clone and build. This is by far the most useful thing you can provide.
+      placeholder: "https://github.com/your-name/rnc-repro"
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Your setup
+      description: >
+        The relevant parts of your `.env` (values redacted), plus any changes you made to
+        `build.gradle`, the Xcode build phases, or your babel config.
+      render: shell
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Build or runtime logs
+      description: The full failure output — Gradle, Xcode, or the Metro/JS error.
+      render: shell
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Output of `npx react-native info`.
+      render: shell
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Would you like to help fix this?
+      description: No pressure — this library is maintained by volunteers, and PRs move fastest.
+      options:
+        - label: I'm willing to open a pull request for this.
+          required: false
