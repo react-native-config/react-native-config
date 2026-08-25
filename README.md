@@ -4,6 +4,13 @@ Module to expose config variables to your javascript code in React Native, suppo
 
 Bring some [12 factor](http://12factor.net/config) love to your mobile apps!
 
+> [!TIP]
+> **Help keep this library maintained.** If `react-native-config` is useful to you or your
+> company, please consider
+> [sponsoring it on Open Collective](https://opencollective.com/react-native-config).
+> Contributions go toward the maintenance work that keeps it working across new React Native
+> releases.
+
 ## Basic Usage
 
 Create a new file `.env` in the root of your React Native app:
@@ -498,12 +505,6 @@ export default {
   FOO_BAR: 'baz',
 };
 ```
-
-## Sponsor
-
-If `react-native-config` is useful to you or your company, please consider sponsoring it on
-[Open Collective](https://opencollective.com/react-native-config). Contributions go toward the
-maintenance work that keeps the library working across new React Native releases.
 
 ## Meta
 
