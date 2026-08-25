@@ -1,8 +1,15 @@
-# Config variables for React Native apps
+<p align="center">
+  <img src="brand/logo.png" alt="" width="120" height="120" />
+</p>
 
-Module to expose config variables to your javascript code in React Native, supporting iOS, Android, macOS and Windows.
+<h1 align="center">react-native-config</h1>
 
-Bring some [12 factor](http://12factor.net/config) love to your mobile apps!
+<p align="center">
+  Config variables for React Native apps, supporting iOS, Android, macOS and Windows.
+</p>
+
+Expose config variables to your JavaScript code — bring some
+[12 factor](http://12factor.net/config) love to your mobile apps!
 
 > [!TIP]
 > **Help keep this library maintained.** If `react-native-config` is useful to you or your
