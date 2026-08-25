@@ -26,7 +26,7 @@ Keep in mind this module doesn't obfuscate or encrypt secrets for packaging, so 
 
 ## Setup
 
-> ⚠️ Note (Android): react-native-config v1.6.0+ requires React Native 0.73 or higher.  
+> ⚠️ Note (Android): react-native-config v1.6.0+ requires React Native 0.74 or higher.  
 > If you use an older RN version, see Troubleshooting below.
 
 Install the package:
@@ -409,8 +409,8 @@ This error stems from `.env` file being malformed. Accepted formats are listed h
 Starting from **react-native-config v1.6.0**, the Android implementation uses
 `BaseReactPackage` instead of `ReactPackage`.
 
-`BaseReactPackage` exists only in **React Native 0.73+**, so projects using older
-React Native versions will see build errors like:
+`BaseReactPackage` was introduced in **React Native 0.74**, so projects on React
+Native 0.73 or older will see build errors like:
 
 > cannot find symbol  
 > class BaseReactPackage
@@ -418,7 +418,7 @@ React Native versions will see build errors like:
 To fix this:
 
 - Use `react-native-config` **below 1.6.0** (e.g. `1.5.10`), or
-- Upgrade React Native to **0.73 or higher**
+- Upgrade React Native to **0.74 or higher**
 
 ## Testing
 
