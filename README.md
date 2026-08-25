@@ -135,15 +135,28 @@ apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.grad
 
 #### Advanced Android Setup
 
-In `android/app/build.gradle`, if you use `applicationIdSuffix` or `applicationId` that is different from the package name indicated in `AndroidManifest.xml` in `<manifest package="...">` tag, for example, to support different build variants:
-Add this in `android/app/build.gradle`
+`BuildConfig` is generated in your module's `namespace`, which is not always the same as its
+`applicationId` — `applicationIdSuffix` and per-flavor `applicationId` change the latter and
+leave the former alone. The library resolves this for you: it looks for `BuildConfig` in the
+package declaring your `Application` class (that is, the `namespace`) before falling back to the
+`applicationId`, so the common variant setups need no extra configuration.
+
+If your `BuildConfig` lives somewhere neither of those points at, name the package explicitly in
+`android/app/build.gradle`:
 
 ```
 defaultConfig {
     ...
-    resValue "string", "build_config_package", "YOUR_PACKAGE_NAME_IN_ANDROIDMANIFEST_XML"
+    resValue "string", "build_config_package", "YOUR_NAMESPACE"
 }
 ```
+
+where `YOUR_NAMESPACE` matches the `namespace` in `android/app/build.gradle` (on React Native
+0.72 and older, the `package` attribute of `<manifest>` in `AndroidManifest.xml`). This value
+takes priority over the automatic resolution above.
+
+If the config arrives in JS as `{}`, check logcat for `ReactConfig: Could not find BuildConfig
+class` — the message lists every package that was tried.
 
 ## TypeScript declaration for your .env file
 
