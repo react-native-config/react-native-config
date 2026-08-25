@@ -37,20 +37,34 @@ $ yarn add react-native-config
 
 Link the library:
 
-(Note: For React Native 0.60 or greater, [autolinking](https://reactnative.dev/blog/2019/07/03/version-60#native-modules-are-now-autolinked) is available)
+On React Native 0.60 and above there is no link step — the library is
+[autolinked](https://reactnative.dev/blog/2019/07/03/version-60#native-modules-are-now-autolinked).
+Rebuild the app so the native side is picked up. On iOS / macOS, install the pod first:
+
+```
+(cd ios; pod install)
+```
+
+> [!WARNING]
+> Do not link this library manually on React Native 0.60 or above, and do not disable its
+> autolinking in `react-native.config.js`. Autolinking is what registers the native module and,
+> on the New Architecture, generates its TurboModule bindings — adding
+> `include ':react-native-config'` to `android/settings.gradle` instead does neither, and the
+> module then resolves to `null` at runtime. See
+> [TypeError: Cannot read property 'getConfig' of null](#typeerror-cannot-read-property-getconfig-of-null).
 
 (Note: For Windows, this module supports autolinking when used with `react-native-windows@0.63`
 or later. For earlier versions you need to manually link the module.)
+
+<details>
+<summary><b>Manual linking</b> — only for React Native below 0.60, or react-native-windows below 0.63</summary>
 
 ```
 $ react-native link react-native-config
 ```
 
-if cocoapods are used in the project then pod has to be installed as well:
-
-```
-(cd ios; pod install)
-```
+(`react-native link` was removed from the React Native CLI; it is only available on the older
+versions these instructions apply to.)
 
  - Manual Link (iOS / macOS)
 
@@ -117,6 +131,8 @@ if cocoapods are used in the project then pod has to be installed as well:
 	**app.cpp**
 
 	Add `PackageProviders().Append(winrt::RNCConfig::ReactPackageProvider());` before `InitializeComponent();`.
+
+</details>
 
 ### Extra step for Android
 #### Using RN-Integrate
@@ -410,6 +426,34 @@ When Proguard is enabled (which it is by default for Android release builds), it
 If using Dexguard, the shrinking phase will remove resources it thinks are unused. It is necessary to add an exception to preserve the build config package name.
 
     -keepresources string/build_config_package
+
+### TypeError: Cannot read property 'getConfig' of null
+
+The JavaScript side loaded but the native module is not registered in the build, so
+`TurboModuleRegistry` returned `null`. In rough order of likelihood:
+
+1. **The app was not rebuilt** after the library was installed. Restarting Metro does not rebuild
+   native code — rebuild the app itself.
+2. **Autolinking is disabled for this library.** Look for an entry like this in
+   `react-native.config.js` and remove it:
+
+   ```js
+   dependencies: {
+     'react-native-config': {
+       platforms: { android: null }, // <- remove
+     },
+   },
+   ```
+
+3. **The library is linked manually.** On React Native 0.60+ autolinking replaces manual linking,
+   and on the New Architecture a manually linked module is never registered as a TurboModule.
+   Remove `include ':react-native-config'` (and the accompanying `project(...)` line) from
+   `android/settings.gradle`, and `implementation project(':react-native-config')` from
+   `android/app/build.gradle`.
+4. **iOS only:** `pod install` has not been run since the library was installed.
+
+After changing any of the above, rebuild from clean — on Android, delete `android/build` and
+`android/app/build` first, since a stale build can keep the old registration.
 
 ### TypeError: _reactNativeConfig.default.getConstants is not a function
 
