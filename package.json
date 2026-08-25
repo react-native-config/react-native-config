@@ -12,14 +12,14 @@
     "windows",
     "12factor"
   ],
-  "homepage": "https://github.com/luggit/react-native-config",
+  "homepage": "https://github.com/react-native-config/react-native-config",
   "contributors": [
     "Luan Curti <luancurti@gmail.com> (https://github.com/luancurti)",
     "Amer Lotfi Orimi <amerllica@gmail.com> (https://github.com/amerllica)"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/luggit/react-native-config"
+    "url": "git+https://github.com/react-native-config/react-native-config.git"
   },
   "private": false,
   "author": "Pedro Belo",
