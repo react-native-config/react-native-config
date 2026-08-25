@@ -499,6 +499,12 @@ export default {
 };
 ```
 
+## Sponsor
+
+If `react-native-config` is useful to you or your company, please consider sponsoring it on
+[Open Collective](https://opencollective.com/react-native-config). Contributions go toward the
+maintenance work that keeps the library working across new React Native releases.
+
 ## Meta
 
 Created by Pedro Belo at [Lugg](https://lugg.com/).
