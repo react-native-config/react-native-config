@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💛 Sponsor react-native-config
+    url: https://github.com/react-native-config/react-native-config/issues/885
+    about: This library is maintained by volunteers. Here's what sponsorship pays for.
+  - name: 📖 Setup and troubleshooting docs
+    url: https://github.com/react-native-config/react-native-config#troubleshooting
+    about: Most build problems are already covered in the README. Please check there first.
