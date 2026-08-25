@@ -62,7 +62,7 @@
     },
     "ios": {
       "modules": {
-        "RNCConfig": {
+        "RNCConfigModule": {
           "className": "RNCConfigModule",
           "unstableRequiresMainQueueSetup": true
         }
