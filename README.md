@@ -16,7 +16,9 @@ Expose config variables to your JavaScript code — bring some
 > company, please consider
 > [sponsoring it on Open Collective](https://opencollective.com/react-native-config).
 > Contributions go toward the maintenance work that keeps it working across new React Native
-> releases.
+> releases. See
+> [#885](https://github.com/react-native-config/react-native-config/issues/885) for what
+> sponsorship pays for and other ways to help.
 
 ## Basic Usage
 
