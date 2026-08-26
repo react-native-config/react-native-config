@@ -443,6 +443,28 @@ If using Dexguard, the shrinking phase will remove resources it thinks are unuse
 
     -keepresources string/build_config_package
 
+### Config is empty (`{}`) on iOS
+
+The values are baked in at build time by the `Config codegen` build phase, so an empty `Config`
+means that phase either did not run or did not find an env file. The library says which it
+was — check the Xcode console (or `npx react-native log-ios`) for a line starting with
+`[react-native-config]`:
+
+- **"no env file was found. Looked for `<path>`"** — nothing was read. If the path is wrong,
+  select the intended file with `ENVFILE` (`ENVFILE=.env.staging npx react-native run-ios`); if
+  the path is right but the file is somewhere else, the project root is probably not where the
+  library expects it (common in monorepos). If the path looks correct, the build phase never ran:
+  re-run `pod install` and build again.
+- **"the env file was read from `<path>`, and no variables were parsed out of it"** — the file
+  was found but yielded nothing. Check that it contains plain `KEY=value` lines.
+
+The same paths are listed at build time. Search the Xcode build log for `Missing .env file` to
+see every location that was tried, in order.
+
+Note that `ENVFILE` naming a file that does not exist is not an error: the library falls back to
+`.env`. The logged path is the file the values actually came from, which is the quickest way to
+spot that fallback.
+
 ### TypeError: Cannot read property 'getConfig' of null
 
 The JavaScript side loaded but the native module is not registered in the build, so

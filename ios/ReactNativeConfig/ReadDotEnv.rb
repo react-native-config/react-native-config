@@ -20,23 +20,29 @@ def read_dot_env(envs_root)
     file = ENV['ENVFILE'] || defaultEnvFile
   end
 
+  # Every path considered, in order. A miss here is not a build failure - the app compiles and
+  # receives an empty config - so the paths are recorded to be named in the message below and
+  # handed to the runtime, rather than leaving "it is empty" as the only available symptom.
+  tried = []
+  resolved_path = nil
+
   dotenv = begin
     # https://regex101.com/r/cbm5Tp/1
     dotenv_pattern = /^(?:export\s+|)(?<key>[[:alnum:]_]+)\s*=\s*((?<quote>["'])?(?<val>.*?[^\\])\k<quote>?|)$/
 
-    path = File.expand_path(File.join(envs_root, file.to_s))
-    if File.exist?(path)
-      raw = File.read(path)
-    elsif File.exist?(file)
-      raw = File.read(file)
-    else
-      defaultEnvPath = File.expand_path(File.join(envs_root, "#{defaultEnvFile}"))
-      unless File.exist?(defaultEnvPath)
-        # try as absolute path
-        defaultEnvPath = defaultEnvFile
-      end
-      raw = File.read(defaultEnvPath)
-    end
+    candidates = [
+      File.expand_path(File.join(envs_root, file.to_s)),
+      file.to_s,
+      File.expand_path(File.join(envs_root, defaultEnvFile.to_s))
+    ]
+    # Last resort, preserving the previous behaviour: treat the default name as a path of its own.
+    candidates << defaultEnvFile unless File.exist?(candidates[2])
+
+    tried = candidates.uniq
+    resolved_path = tried.find { |candidate| File.exist?(candidate) }
+    raise Errno::ENOENT, tried.last if resolved_path.nil?
+
+    raw = File.read(resolved_path)
 
     raw.split("\n").inject({}) do |h, line|
       m = line.match(dotenv_pattern)
@@ -57,7 +63,12 @@ def read_dot_env(envs_root)
       puts('**************************')
       puts('*** Missing .env file ****')
       puts('**************************')
-      return [{}, false] # set dotenv as an empty hash
+      puts('Tried, in order:')
+      tried.each { |candidate| puts("  - #{candidate}") }
+      puts('The build will succeed and Config will be empty at runtime.')
+      # set dotenv as an empty hash
+      return [{}, false, { found: false, path: nil, tried: tried }]
   end
-  [dotenv, custom_env]
+
+  [dotenv, custom_env, { found: !resolved_path.nil?, path: resolved_path, tried: tried }]
 end
