@@ -368,44 +368,63 @@ Also note that besides requiring lowercase, the matching is done with `buildFlav
 
 #### iOS / macOS
 
-The basic idea in iOS is to have one scheme per environment file, so you can easily alternate between them.
+There are two ways to pick the env file. Prefer the first: nothing is copied over anything else,
+and the same setup works from Xcode, the CLI and CI.
 
-Start by creating a new scheme:
+##### Per build configuration (recommended)
 
-- In the Xcode menu, go to Product > Scheme > Edit Scheme
-- Click Duplicate Scheme on the bottom
-- Give it a proper name on the top left. For instance: "Myapp (staging)"
-- Make sure the "Shared" checkbox is checked so the scheme is added to your version control system
-
-Then edit the newly created scheme to make it use a different env file. From the same "manage scheme" window:
-
-- Expand the "Build" settings on left
-- Click "Pre-actions", and under the plus sign select "New Run Script Action"
-- Where it says "Type a script or drag a script file", type:
-  ```
-  cp "${PROJECT_DIR}/../.env.staging" "${PROJECT_DIR}/../.env"  # replace .env.staging for your file
-  ```
-Also ensure that "Provide build settings from", just above the script, has a value selected so that PROJECT_DIR is set.
-
-Alternatively, if you have separated build configurations, you may easily set the different envfiles per configuration by adding these lines into the end of Podfile:
+Create one build configuration per environment — in Xcode, select the project, then _Info_ >
+_Configurations_, and duplicate `Debug` and `Release` into e.g. `Debug-Staging` and
+`Release-Staging`. Name the env files to match, and one line in the `Podfile` covers every
+configuration, present and future:
 
 ```ruby
-ENVFILES = {
-  'Debug' => '$(PODS_ROOT)/../../.env.debug',
-  'Release' => '$(PODS_ROOT)/../../.env.production',
-}
 post_install do |installer|
   installer.pods_project.targets.each do |target|
+    next unless target.name == 'react-native-config'
+
     target.build_configurations.each do |config|
-      if target.name == 'react-native-config'
-        config.build_settings['ENVFILE'] = ENVFILES[config.name]
-      end
+      config.build_settings['ENVFILE'] = '.env.$(CONFIGURATION)'
     end
   end
 end
 ```
 
-Note that if you have flipper enabled in your Podfile, you must move the `flipper_post_install` into the newely added hook since Podfile doesn't allow multiple `post_install` hooks.
+With configurations `Debug-Staging` and `Release-Staging`, that reads `.env.Debug-Staging` and
+`.env.Release-Staging` from the project root. The path is relative to the project root, and
+`$(CONFIGURATION)` — or any other build setting, such as `$(PLATFORM_NAME)` — is expanded when the
+script runs.
+
+If your env files are not named after your configurations, map them explicitly instead:
+
+```ruby
+ENVFILES = {
+  'Debug' => '.env.development',
+  'Release' => '.env.production',
+  'Debug-Staging' => '.env.staging',
+  'Release-Staging' => '.env.staging',
+}
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    next unless target.name == 'react-native-config'
+
+    target.build_configurations.each do |config|
+      config.build_settings['ENVFILE'] = ENVFILES[config.name]
+    end
+  end
+end
+```
+
+Run `pod install` after editing the `Podfile`. The chosen file is echoed in the build log — search
+it for `ENVFILE=` to see what was selected and what it expanded to.
+
+> [!IMPORTANT]
+> If `ENVFILE` names a file that does not exist, the build does **not** fail: it falls back to
+> `.env`, which means a correct-looking setup can quietly ship the wrong environment. The build log
+> flags this — search for `ENVFILE was set, but that file is missing`.
+
+Note that if you have flipper enabled in your Podfile, you must move the `flipper_post_install`
+into the newly added hook, since Podfile doesn't allow multiple `post_install` hooks.
 
 ```diff
   target 'MyApp' do
@@ -420,14 +439,50 @@ Note that if you have flipper enabled in your Podfile, you must move the `flippe
 +   flipper_post_install(installer)
 
     installer.pods_project.targets.each do |target|
+      next unless target.name == 'react-native-config'
+
       target.build_configurations.each do |config|
-        if target.name == 'react-native-config'
-          config.build_settings['ENVFILE'] = ENVFILES[config.name]
-        end
+        config.build_settings['ENVFILE'] = '.env.$(CONFIGURATION)'
       end
     end
   end
 ```
+
+##### If you have several app targets
+
+Selection is per build **configuration**, not per target. CocoaPods builds one
+`react-native-config` pod target per configuration and shares it between the app targets that
+depend on it, so two targets built as `Debug` both get the same env file — there is no point at
+which the library can tell them apart.
+
+Give each environment its own build configurations (`Debug-Staging`, `Release-Staging`, …), set
+each target's scheme to use them, and the setup above then distinguishes them correctly.
+
+##### Per scheme (copies the file)
+
+The older approach: one scheme per environment, each copying its env file over `.env` before the
+build. It rewrites a file in your project on every build, and the copy is easy to forget on CI, so
+prefer the configuration-based setup above unless you specifically need this.
+
+Start by creating a new scheme:
+
+- In the Xcode menu, go to Product > Scheme > Edit Scheme
+- Click Duplicate Scheme on the bottom
+- Give it a proper name on the top left. For instance: "Myapp (staging)"
+- Make sure the "Shared" checkbox is checked so the scheme is added to your version control system
+
+Then edit the newly created scheme to make it use a different env file. From the same "manage
+scheme" window:
+
+- Expand the "Build" settings on left
+- Click "Pre-actions", and under the plus sign select "New Run Script Action"
+- Where it says "Type a script or drag a script file", type:
+  ```
+  cp "${PROJECT_DIR}/../.env.staging" "${PROJECT_DIR}/../.env"  # replace .env.staging for your file
+  ```
+
+Also ensure that "Provide build settings from", just above the script, has a value selected so that
+PROJECT_DIR is set.
 
 ## Troubleshooting
 

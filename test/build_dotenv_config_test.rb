@@ -117,4 +117,34 @@ class BuildDotenvConfigTest < Minitest::Test
     refute_includes generated, %(@"#{quoted_root}"),
                     'an unescaped quote would produce a source file that does not compile'
   end
+
+  def test_selects_the_env_file_for_the_build_configuration
+    File.write(File.join(@root, '.env'), "API_URL=default\n")
+    File.write(File.join(@root, '.env.Release-Staging'), "API_URL=staging\n")
+
+    _stdout, _stderr, status = Open3.capture3(
+      { 'BUILD_DIR' => @build_dir, 'CONFIGURATION' => 'Release-Staging',
+        'ENVFILE' => '.env.$(CONFIGURATION)' },
+      'ruby', SCRIPT, @root, @out
+    )
+
+    assert status.success?
+    assert_includes generated, '@"API_URL":@"staging"'
+    assert_includes generated, %(#define RNC_DOT_ENV_PATH @"#{File.join(@root, '.env.Release-Staging')}")
+  end
+
+  def test_warns_in_the_build_log_when_envfile_names_a_missing_file
+    File.write(File.join(@root, '.env'), "API_URL=default\n")
+
+    stdout, stderr, status = Open3.capture3(
+      { 'BUILD_DIR' => @build_dir, 'ENVFILE' => '.env.production' },
+      'ruby', SCRIPT, @root, @out
+    )
+    output = stdout + stderr
+
+    assert status.success?, 'the fallback is not a build failure'
+    assert_includes output, 'ENVFILE was set, but that file is missing'
+    assert_includes output, '.env.production'
+    assert_includes generated, '@"API_URL":@"default"'
+  end
 end
