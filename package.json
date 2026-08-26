@@ -35,6 +35,9 @@
   ],
   "types": "./index.d.ts",
   "license": "MIT",
+  "scripts": {
+    "test": "ruby test/run.rb"
+  },
   "devDependencies": {
     "@react-native-community/cli": "^20.0.2",
     "@semantic-release/git": "^10.0.1",
