@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.summary      = 'Expose config variables to React Native apps'
   s.author       = 'Pedro Belo'
 
-  s.homepage     = 'https://github.com/luggit/react-native-config'
+  s.homepage     = 'https://github.com/react-native-config/react-native-config'
 
   s.license      = 'MIT'
   s.ios.deployment_target = '9.0'
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.macos.deployment_target = '10.15'
   s.visionos.deployment_target = '1.0' if s.respond_to?(:visionos)
 
-  s.source       = { git: 'https://github.com/luggit/react-native-config.git', tag: "v#{s.version.to_s}" }
+  s.source       = { git: 'https://github.com/react-native-config/react-native-config.git', tag: "v#{s.version.to_s}" }
   s.script_phase = {
     name: 'Config codegen',
     script: %(
