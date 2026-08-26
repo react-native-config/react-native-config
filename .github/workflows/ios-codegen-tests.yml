@@ -1,0 +1,34 @@
+name: iOS codegen tests
+
+on:
+  pull_request:
+    paths:
+      - 'ios/**'
+      - 'test/**'
+      - 'package.json'
+      - '.github/workflows/ios-codegen-tests.yml'
+  push:
+    branches: [master]
+
+jobs:
+  test:
+    name: iOS codegen tests
+    # macOS: the suite compiles and runs RNCConfig.m against Foundation, which is where the
+    # empty-config diagnostic actually lives.
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          ruby --version
+          clang --version
+
+      # Written by Xcode scheme pre-actions and read before ENVFILE. A copy on the runner would
+      # override every fixture in the suite, so the run refuses to start with one present.
+      - name: Ensure no stale /tmp/envfile
+        run: rm -f /tmp/envfile
+
+      - name: Run tests
+        run: ruby test/run.rb
