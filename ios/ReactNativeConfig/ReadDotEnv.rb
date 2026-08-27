@@ -100,11 +100,11 @@ def read_dot_env(envs_root)
 
     raw = File.read(resolved_path)
 
-    raw.split("\n").inject({}) do |h, line|
+    raw.split("\n").each_with_object({}) do |line, h|
       m = line.match(dotenv_pattern)
 
-      next h if line.nil? || line.strip.empty?
-      next h if line.match(/^\s*#/)
+      next if line.nil? || line.strip.empty?
+      next if line.match(/^\s*#/)
 
       if m.nil?
         abort('Invalid entry in .env file. Please verify your .env file is correctly formatted.')
@@ -113,7 +113,7 @@ def read_dot_env(envs_root)
       key = m[:key]
       # Ensure string (in case of empty value) and escape any quotes present in the value.
       val = m[:val].to_s.gsub('"', '\"')
-      h.merge(key => val)
+      h[key] = val
     end
     rescue Errno::ENOENT
       puts('**************************')
