@@ -13,6 +13,12 @@
     "12factor"
   ],
   "homepage": "https://github.com/react-native-config/react-native-config",
+  "funding": [
+    {
+      "type": "opencollective",
+      "url": "https://opencollective.com/react-native-config"
+    }
+  ],
   "contributors": [
     "Luan Curti <luancurti@gmail.com> (https://github.com/luancurti)",
     "Amer Lotfi Orimi <amerllica@gmail.com> (https://github.com/amerllica)"
