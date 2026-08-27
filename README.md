@@ -16,9 +16,7 @@ Expose config variables to your JavaScript code — bring some
 > company, please consider
 > [sponsoring it on Open Collective](https://opencollective.com/react-native-config).
 > Contributions go toward the maintenance work that keeps it working across new React Native
-> releases. See
-> [#885](https://github.com/react-native-config/react-native-config/issues/885) for what
-> sponsorship pays for and other ways to help.
+> releases. See [Sponsors](#sponsors) for the tiers and what sponsorship pays for.
 
 ## Basic Usage
 
@@ -591,6 +589,61 @@ export default {
   FOO_BAR: 'baz',
 };
 ```
+
+## Sponsors
+
+`react-native-config` is downloaded around **380,000 times a week** and is used in thousands
+of apps across iOS, Android, macOS and Windows. It is maintained by volunteers, in their own
+time.
+
+Sponsorship pays for the unglamorous work that keeps the library alive: testing against each
+new React Native release, fixing native build breakages before they reach your CI, triaging
+issues, reviewing community pull requests, and keeping the test matrix green across four
+platforms.
+
+👉 **[Sponsor on Open Collective](https://opencollective.com/react-native-config)**
+
+The collective is hosted by [Open Source Collective](https://oscollective.org/), so
+contributions come with proper invoices and receipts and can normally go through your
+company's regular expense or vendor process.
+
+### Tiers
+
+| Tier | Amount | What you get |
+| --- | --- | --- |
+| **Partner** | $1,000 / month | Logo and link at the top of this README and in each release note, listed first on Open Collective, and a direct channel to the maintainers for build breakages affecting your apps. |
+| **Sponsor** | $250 / month | Logo and link in this section and on Open Collective. |
+| **Backer** | $50 / month | Your name or avatar in this section and on Open Collective. |
+| **Supporter** | $5 / month | Your name on Open Collective — for individuals who just want to help. |
+| **One-off** | any amount | Our thanks. One-off contributions fund exactly the same work. |
+
+Different budget, or a procurement process that needs something else? Open an issue and we
+will work something out.
+
+### What sponsorship is, and what it isn't
+
+Sponsorship funds maintenance — it is not a support contract. There is no SLA, no guaranteed
+response time, and no feature commitments, and sponsors get no special influence over the
+library's technical direction. What it buys is a maintained library: someone with the time to
+look at the Gradle plugin the day React Native changes it.
+
+### Current sponsors
+
+None yet — [be the first](https://opencollective.com/react-native-config). 💛
+
+<!-- Sponsor logos go here once we have them:
+<p align="center">
+  <a href="https://example.com"><img src="https://example.com/logo.png" alt="Example" height="48" /></a>
+</p>
+-->
+
+### Can't sponsor? You can still help
+
+- Reproduce and comment on open issues, especially with native build logs.
+- Review or send pull requests.
+- Improve the docs — setup steps go stale fast.
+- Ask your company to sponsor. A recurring company sponsorship is worth far more to this
+  project than any one-off donation.
 
 ## Meta
 

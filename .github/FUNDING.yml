@@ -1,1 +1,11 @@
+# Shown as the "Sponsor" button on the repository.
+
+# One-off and recurring contributions, from individuals and companies.
+# Hosted by Open Source Collective — invoices and receipts included, so it can go
+# through an employer's expenses. See the Sponsors section of the README for tiers.
 open_collective: react-native-config
+
+# GitHub Sponsors — uncomment once the maintainers have published a sponsors listing
+# on their accounts (https://github.com/sponsors). GitHub ignores usernames that have
+# no listing, so this stays commented until then.
+# github: [luancurti, amerllica]
