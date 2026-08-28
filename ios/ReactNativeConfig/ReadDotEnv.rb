@@ -101,11 +101,10 @@ def read_dot_env(envs_root)
     raw = File.read(resolved_path)
 
     raw.split("\n").each_with_object({}) do |line, h|
-      m = line.match(dotenv_pattern)
-
-      next if line.nil? || line.strip.empty?
+      next if line.strip.empty?
       next if line.match(/^\s*#/)
 
+      m = line.match(dotenv_pattern)
       if m.nil?
         abort('Invalid entry in .env file. Please verify your .env file is correctly formatted.')
       end
