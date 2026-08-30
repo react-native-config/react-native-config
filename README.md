@@ -40,6 +40,11 @@ Keep in mind this module doesn't obfuscate or encrypt secrets for packaging, so 
 
 ## Setup
 
+> ✅ The latest version of react-native-config is tested with **React Native 0.87** (New
+> Architecture) — see the [example app](Example/). On Windows it is tested with
+> **react-native-windows 0.79**, the newest React Native version react-native-windows
+> supports today — see the [Windows example app](Example.windows/).
+
 > ⚠️ Note (Android): react-native-config v1.6.0+ requires React Native 0.74 or higher.  
 > If you use an older RN version, see Troubleshooting below.
 
@@ -572,10 +577,9 @@ To fix this:
 
 Since `react-native-config` contains native code, it cannot be run in a node.js environment (Jest, Mocha). [react-native-config-node](https://github.com/CureApp/react-native-config-node) provides a way to mock `react-native-config` for use in test runners - exactly as it is used in the actual app.
 
-On Windows, [the Example app](example/) supports running automatic tests by using [WinAppDriver](https://github.com/microsoft/WinAppDriver). In the Example app folder run:
+On Windows, the [Windows example app](Example.windows/) runs its tests with the [react-native-windows Jest preset](https://github.com/microsoft/rnx-kit/tree/main/packages/jest-preset). In the `Example.windows` folder run:
 
 ```console
-yarn appium
 yarn test:windows
 ```
 

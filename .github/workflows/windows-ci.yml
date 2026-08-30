@@ -1,53 +1,50 @@
 name: Windows CI
-on: [pull_request]
+
+# Builds the minimal Windows example (Example.windows, RN 0.79 + react-native-windows 0.79 —
+# the newest RN that react-native-windows supports). Once react-native-windows catches up with
+# the main example's React Native version, fold windows support into Example/ and retire this.
+on:
+  pull_request:
+    paths:
+      - 'windows/**'
+      - 'Example.windows/**'
+      - 'index.js'
+      - 'package.json'
+      - '.github/workflows/windows-ci.yml'
+  push:
+    branches: [master]
 
 env:
-  TEST_EXAMPLE_DIR: Example/0.79.6
+  TEST_EXAMPLE_DIR: Example.windows
 
 jobs:
-  run-windows-tests:
+  build:
     name: Build & run tests
     runs-on: windows-2022
 
     steps:
-    - uses: actions/checkout@v2
-      name: Checkout Code
+      - uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: "24.11.1"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+          cache-dependency-path: ${{ env.TEST_EXAMPLE_DIR }}/yarn.lock
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.1.3
-      with:
-        vs-version: 16.5
+      - name: Install node modules
+        working-directory: ${{ env.TEST_EXAMPLE_DIR }}
+        run: yarn install --frozen-lockfile
 
-    - name: Check node modules cache
-      uses: actions/cache@v3
-      id: yarn-cache
-      with:
-        path: ./${{ env.TEST_EXAMPLE_DIR }}/node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+      - name: Run tests
+        working-directory: ${{ env.TEST_EXAMPLE_DIR }}
+        run: |
+          yarn test
+          yarn test:windows
 
-    - name: Install node modules
-      if: steps.yarn-cache.outputs.cache-hit != 'true'
-      run: |
-        cd ${{ env.TEST_EXAMPLE_DIR }}
-        yarn --pure-lockfile
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
 
-    - name: Install MSBuild
-      uses: microsoft/setup-msbuild@v1.3
-    
-    - name: Install Visual Studio Build Tools
-      run: |
-        choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --includeOptional" -y
-
-    - name: Start Appium server
-      shell: powershell
-      run: |
-        cd ${{ env.TEST_EXAMPLE_DIR }}
-        Start-Process PowerShell -ArgumentList "yarn appium"
-
+      - name: Build Windows app
+        working-directory: ${{ env.TEST_EXAMPLE_DIR }}
+        run: npx @react-native-community/cli run-windows --arch x64 --logging --no-packager --no-launch --no-deploy
