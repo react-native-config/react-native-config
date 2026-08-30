@@ -1,0 +1,102 @@
+name: Example CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  js:
+    name: Lint, typecheck & test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Example
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: Example/yarn.lock
+
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Test
+        run: yarn test
+
+  android:
+    name: Android build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Example
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: Example/yarn.lock
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+        working-directory: Example/android
+
+  ios:
+    name: iOS build
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: Example
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: Example/yarn.lock
+
+      # The Config codegen build phase writes into the symlinked library sources during the
+      # build (see Example/README.md). Ensure no PR commits that overwrite: the committed
+      # file must be the ungenerated placeholder.
+      - name: Ensure the committed GeneratedDotEnv.m is the placeholder
+        run: grep -q "RNC_DOT_ENV_FOUND 0" ../ios/ReactNativeConfig/GeneratedDotEnv.m
+
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+
+      - name: Install pods
+        run: |
+          bundle install
+          bundle exec pod install --project-directory=ios
+
+      - name: Build for iOS Simulator
+        run: |
+          set -o pipefail
+          xcodebuild -workspace ios/RNCExample.xcworkspace \
+            -scheme RNCExample \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcbeautify --renderer github-actions
