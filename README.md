@@ -572,6 +572,12 @@ To fix this:
 
 Since `react-native-config` contains native code, it cannot be run in a node.js environment (Jest, Mocha). [react-native-config-node](https://github.com/CureApp/react-native-config-node) provides a way to mock `react-native-config` for use in test runners - exactly as it is used in the actual app.
 
+On Windows, the [Windows example app](Example.windows/) runs its tests with the [react-native-windows Jest preset](https://github.com/microsoft/rnx-kit/tree/main/packages/jest-preset). In the `Example.windows` folder run:
+
+```console
+yarn test:windows
+```
+
 ### Jest
 
 For mocking the `Config.FOO_BAR` usage, create a mock at `__mocks__/react-native-config.js`:

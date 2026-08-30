@@ -1,0 +1,50 @@
+name: Windows CI
+
+# Builds the minimal Windows example (Example.windows, RN 0.79 + react-native-windows 0.79 —
+# the newest RN that react-native-windows supports). Once react-native-windows catches up with
+# the main example's React Native version, fold windows support into Example/ and retire this.
+on:
+  pull_request:
+    paths:
+      - 'windows/**'
+      - 'Example.windows/**'
+      - 'index.js'
+      - 'package.json'
+      - '.github/workflows/windows-ci.yml'
+  push:
+    branches: [master]
+
+env:
+  TEST_EXAMPLE_DIR: Example.windows
+
+jobs:
+  build:
+    name: Build & run tests
+    runs-on: windows-2022
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+          cache-dependency-path: ${{ env.TEST_EXAMPLE_DIR }}/yarn.lock
+
+      - name: Install node modules
+        working-directory: ${{ env.TEST_EXAMPLE_DIR }}
+        run: yarn install --frozen-lockfile
+
+      - name: Run tests
+        working-directory: ${{ env.TEST_EXAMPLE_DIR }}
+        run: |
+          yarn test
+          yarn test:windows
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build Windows app
+        working-directory: ${{ env.TEST_EXAMPLE_DIR }}
+        run: npx @react-native-community/cli run-windows --arch x64 --logging --no-packager --no-launch --no-deploy
