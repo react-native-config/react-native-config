@@ -31,3 +31,11 @@ yarn android
 ```sh
 yarn test
 ```
+
+## Note for contributors
+
+The app depends on the library through a symlink (`"react-native-config": "link:../"`), so building the iOS example runs the Config codegen build phase against the real library sources and overwrites `ios/ReactNativeConfig/GeneratedDotEnv.m` in the repository root. Don't commit that change — restore the placeholder before committing:
+
+```sh
+git checkout -- ../ios/ReactNativeConfig/GeneratedDotEnv.m
+```
