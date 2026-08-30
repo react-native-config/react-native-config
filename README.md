@@ -40,6 +40,11 @@ Keep in mind this module doesn't obfuscate or encrypt secrets for packaging, so 
 
 ## Setup
 
+> ✅ The latest version of react-native-config is tested with **React Native 0.87** (New
+> Architecture) — see the [example app](Example/). On Windows it is tested with
+> **react-native-windows 0.79**, the newest React Native version react-native-windows
+> supports today — see the [Windows example app](Example.windows/).
+
 > ⚠️ Note (Android): react-native-config v1.6.0+ requires React Native 0.74 or higher.  
 > If you use an older RN version, see Troubleshooting below.
 
