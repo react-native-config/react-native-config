@@ -1,6 +1,6 @@
-# react-native-config example — React Native 0.87.1
+# react-native-config example
 
-Example app demonstrating [react-native-config](../../) on React Native 0.87 (New Architecture).
+Example app demonstrating [react-native-config](../) on React Native 0.87 (New Architecture).
 
 The app reads `ENV` and `API_URL` from the [`.env`](.env) file in this directory and renders them on screen.
 

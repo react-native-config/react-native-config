@@ -5384,8 +5384,9 @@ react-is@^19.2.3:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.2.8.tgz#09826f9fbc187bc668e3e5c62edc001f804d5018"
   integrity sha512-s5un28nYxKJw5gvUHyW5PCC28CvBqLu9r3cWgzHT4Vo/5fqqkFcdRYsGcKf50WMPpjjFZS5d76fn3YCo2njKwQ==
 
-react-native-config@../../:
-  version "1.7.2"
+"react-native-config@link:..":
+  version "0.0.0"
+  uid ""
 
 react-native@0.87.1:
   version "0.87.1"
