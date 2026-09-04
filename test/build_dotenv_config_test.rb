@@ -47,6 +47,18 @@ class BuildDotenvConfigTest < Minitest::Test
     assert_includes generated, %(#define RNC_DOT_ENV_PATH @"#{File.join(@root, '.env')}")
   end
 
+  def test_does_not_print_dotenv_values_in_the_build_log
+    sensitive_value = 'not-for-build-logs'
+    File.write(File.join(@root, '.env'), "API_TOKEN=#{sensitive_value}\n")
+
+    output, status = run_codegen
+
+    assert status.success?, 'codegen should succeed'
+    assert_includes output, 'read 1 dotenv entries'
+    refute_includes output, sensitive_value
+    assert_includes generated, sensitive_value
+  end
+
   # The core regression guard. Before this change the generated file was an empty DOT_ENV and
   # nothing else, leaving the app with {} and no way to explain it.
   def test_marks_the_env_file_as_not_found_when_there_is_none
