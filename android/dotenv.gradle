@@ -1,5 +1,6 @@
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import groovy.json.JsonOutput
 
 def getCurrentFlavor() {
     Gradle gradle = getGradle()
@@ -52,7 +53,7 @@ def loadDotEnv(flavor = getCurrentFlavor()) {
             def matcher = (line =~ /^\s*(?:export\s+|)([\w\d\.\-_]+)\s*=\s*['"]?(.*?)?['"]?\s*$/)
             // TODO: Fail Android builds if line doesn't match
             if (matcher.getCount() == 1 && matcher[0].size() == 3) {
-                env.put(matcher[0][1], matcher[0][2].replace('"', '\\"'))
+                env.put(matcher[0][1], matcher[0][2])
             }
         }
     } else {
@@ -70,8 +71,8 @@ android {
     defaultConfig {
         project.env.each { k, v ->
             def escaped = v.replaceAll("%","\\\\u0025")
-            buildConfigField "String", k, "\"$v\""
-            resValue "string", k, "\"$escaped\""
+            buildConfigField "String", k, JsonOutput.toJson(v)
+            resValue "string", k, JsonOutput.toJson(escaped)
         }
     }
 }

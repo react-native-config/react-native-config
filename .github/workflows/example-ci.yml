@@ -59,7 +59,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug
+        run: ENVFILE=.env.android-escaping ./gradlew assembleDebug
         working-directory: Example/android
 
   ios:
