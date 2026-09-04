@@ -15,15 +15,35 @@ Encoding.default_internal = Encoding::UTF_8
 dotenv, custom_env, resolution = read_dot_env(envs_root)
 puts "read dotenv #{dotenv}"
 
+def escape_objc_string(value)
+  value.to_s.each_char.map do |char|
+    case char
+    when '"' then '\\"'
+    when '\\' then '\\\\'
+    when "\n" then '\\n'
+    when "\r" then '\\r'
+    when "\t" then '\\t'
+    else
+      if char.ord < 32 || char.ord == 127
+        char.bytes.map { |byte| format('\\%03o', byte) }.join
+      else
+        char
+      end
+    end
+  end.join
+end
+
 # create obj file that sets DOT_ENV as a NSDictionary
-dotenv_objc = dotenv.map { |k, v| %(@"#{k}":@"#{v.chomp}") }.join(',')
+dotenv_objc = dotenv.map do |key, value|
+  %(@"#{escape_objc_string(key)}":@"#{escape_objc_string(value.chomp)}")
+end.join(',')
 
 # Carry the outcome of the lookup into the binary alongside the values themselves. An empty
 # DOT_ENV is otherwise indistinguishable at runtime from an env file that was never found, and
 # the latter is by far the more common cause - see RNCConfig.m.
 env_found = resolution && resolution[:found] ? 1 : 0
 env_path = (resolution && (resolution[:path] || resolution[:tried].first)).to_s
-env_path_objc = env_path.gsub('\\', '\\\\\\\\').gsub('"', '\"')
+env_path_objc = escape_objc_string(env_path)
 
 template = <<EOF
   #define DOT_ENV @{ #{dotenv_objc} };
