@@ -9,6 +9,7 @@ require 'open3'
 # RNCConfig.m can tell "no env file was found" apart from "the file was empty" at runtime.
 class BuildDotenvConfigTest < Minitest::Test
   SCRIPT = File.expand_path('../ios/ReactNativeConfig/BuildDotenvConfig.rb', __dir__)
+  SOURCE_DIR = File.expand_path('../ios/ReactNativeConfig', __dir__)
 
   def setup
     @root = Dir.mktmpdir('rnc-build-root')
@@ -33,6 +34,32 @@ class BuildDotenvConfigTest < Minitest::Test
 
   def generated
     File.read(File.join(@out, 'GeneratedDotEnv.m'))
+  end
+
+  def compile_and_run_generated
+    skip 'clang is unavailable' unless system('which clang > /dev/null 2>&1')
+    skip 'Foundation is unavailable (macOS only)' unless RUBY_PLATFORM.include?('darwin')
+
+    Dir.mktmpdir('rnc-generated-objc') do |dir|
+      FileUtils.cp(File.join(SOURCE_DIR, 'RNCConfig.m'), dir)
+      FileUtils.cp(File.join(SOURCE_DIR, 'RNCConfig.h'), dir)
+      File.write(File.join(dir, 'GeneratedDotEnv.m'), generated)
+      File.write(File.join(dir, 'main.m'), <<~OBJC)
+        #import <Foundation/Foundation.h>
+        #import "RNCConfig.h"
+        int main() { @autoreleasepool { [RNCConfig env]; } return 0; }
+      OBJC
+
+      binary = File.join(dir, 'app')
+      _stdout, stderr, status = Open3.capture3(
+        'clang', '-fobjc-arc', '-Werror', '-framework', 'Foundation', '-I', dir,
+        File.join(dir, 'RNCConfig.m'), File.join(dir, 'main.m'), '-o', binary
+      )
+      assert status.success?, "generated Objective-C failed to compile:\n#{stderr}"
+
+      _stdout, stderr, status = Open3.capture3(binary)
+      assert status.success?, "generated config executed injected code:\n#{stderr}"
+    end
   end
 
   def test_emits_values_and_marks_the_env_file_as_found
@@ -116,6 +143,16 @@ class BuildDotenvConfigTest < Minitest::Test
     assert_includes generated, '\\"quoted'
     refute_includes generated, %(@"#{quoted_root}"),
                     'an unescaped quote would produce a source file that does not compile'
+  end
+
+  def test_backslash_before_a_quote_cannot_escape_the_generated_string_literal
+    payload = %q|\", @1:(abort(), @2) } //|
+    File.write(File.join(@root, '.env'), "PAYLOAD=#{payload}\n")
+
+    _output, status = run_codegen
+
+    assert status.success?
+    compile_and_run_generated
   end
 
   def test_selects_the_env_file_for_the_build_configuration
