@@ -27,10 +27,6 @@ end
 # Which env file was asked for, and by whom. Kept separate from finding it so that a fallback can
 # be reported against what was actually requested.
 def select_env_file(default_env_file)
-  if File.exist?('/tmp/envfile')
-    return { name: File.read('/tmp/envfile').strip, source: :tmp_envfile, unset: [], custom: true }
-  end
-
   requested = ENV['ENVFILE']
   if requested.nil? || requested.empty?
     return { name: default_env_file, source: :default, unset: [], custom: false }

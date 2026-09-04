@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
+require 'minitest/mock'
 require 'tmpdir'
 require 'fileutils'
 
@@ -245,6 +246,20 @@ class ReadDotEnvSelectionTest < Minitest::Test
     (_dotenv, _custom, explicit), = read
     assert_equal :envfile, explicit[:source]
     assert_equal '.env.production', explicit[:requested]
+  end
+
+  def test_does_not_consult_a_machine_global_env_selector
+    selection = nil
+    exists = lambda do |path|
+      raise 'consulted /tmp/envfile' if path == '/tmp/envfile'
+
+      false
+    end
+
+    File.stub(:exist?, exists) { selection = select_env_file('.env') }
+
+    assert_equal :default, selection[:source]
+    assert_equal '.env', selection[:name]
   end
 
   def test_an_absolute_envfile_path_is_used_as_given
